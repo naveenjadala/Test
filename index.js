@@ -13,9 +13,9 @@ mongoose.connect(process.env.MONGO_URI,
     .then(() =>  console.log("DB Connected"))
     .catch(v => console.log(v));
 
-mongoose.connection.on("error", err => {
-    console.log(`DB connection error: ${err}`)
-})
+// mongoose.connection.on("error", err => {
+//     console.log(`DB connection error: ${err}`)
+// })
 
 const port = process.env.PORT || 8080
 app.listen(port, console.log(`${port}`));
