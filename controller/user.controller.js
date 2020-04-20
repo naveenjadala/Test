@@ -24,22 +24,23 @@ exports.sigUpNewUser = async(req, res, next) => {
 //sigin user
 exports.sigin = (req, res) => {
     const { email, password} = req.body
-    const user =UserModel.findOne({email})
-    user.exec()
+    UserModel.findOne({email})
     .then(user => {
+        console.log(user);
         if(!user.authantication(password)) {
-
+            console.log("auth password");
             return res.status(401).json({
                 error: "incorrect Email or password"
             })
         }
 
-        const token = jwt.sign({_id: user._id}, process.env.jwt)
+        const token = jwt.sign({_id: user._id}, process.env.JWT)
         res.cookie("t", token, {expire: new Date() + 9999});
         const { _id, email, name } = user 
         return res.json( {token, user: { _id, email, name} })
 
-    }).catch(err => res.json({ error: err}))
+    }).catch(err => res.json({ error: err,
+    message: "hfhgf"}))
     // UserModel.findOne({email}, (err,user) => {
 
     //     if(err || !user) {
