@@ -24,13 +24,9 @@ exports.sigUpNewUser = async(req, res, next) => {
 //sigin user
 exports.sigin = (req, res) => {
     const { email, password} = req.body
-    UserModel.findOne({email}, (err,user) => {
-
-        if(err || !user) {
-            return res.status(401).json({
-                error: "User does't exist with the email"
-            })
-        }
+    const user =UserModel.findOne({email})
+    user.exec()
+    .then(user => {
         if(!user.authantication(password)) {
 
             return res.status(401).json({
@@ -42,7 +38,27 @@ exports.sigin = (req, res) => {
         res.cookie("t", token, {expire: new Date() + 9999});
         const { _id, email, name } = user 
         return res.json( {token, user: { _id, email, name} })
-    })
+
+    }).catch(err => res.json({ error: err}))
+    // UserModel.findOne({email}, (err,user) => {
+
+    //     if(err || !user) {
+    //         return res.status(401).json({
+    //             error: "User does't exist with the email"
+    //         })
+    //     }
+    //     if(!user.authantication(password)) {
+
+    //         return res.status(401).json({
+    //             error: "incorrect Email or password"
+    //         })
+    //     }
+
+    //     const token = jwt.sign({_id: user._id}, process.env.jwt)
+    //     res.cookie("t", token, {expire: new Date() + 9999});
+    //     const { _id, email, name } = user 
+    //     return res.json( {token, user: { _id, email, name} })
+    // })
 
 }
 
